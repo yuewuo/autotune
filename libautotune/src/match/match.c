@@ -859,7 +859,7 @@ int m_time_delete(MATCHING *m) {
 		pos[0] = dot->i;
 		pos[1] = dot->j;
 		pos[2] = dot->little_t;
-		hash = abs(fasthash32(pos, 3, 0));
+		hash = abs((int)fasthash32(pos, 3, 0));
 		ht_delete_key(m->dot_ht, hash, dot, NULL);
 
 		cdll_delete_node(n, m_free_void_dot);
@@ -1462,7 +1462,7 @@ void m_execute_and_delete_undos(MATCHING *matching) {
 			pos[0] = dot->i;
 			pos[1] = dot->j;
 			pos[2] = dot->little_t;
-			hash = abs(fasthash32(pos, 3, 0));
+			hash = abs((int)fasthash32(pos, 3, 0));
 			ht_delete_key(matching->dot_ht, hash, dot, NULL);
 
 			if (dot->bfs != NULL) {
@@ -1562,7 +1562,7 @@ void m_execute_and_delete_undos(MATCHING *matching) {
 			pos[0] = dot->i;
 			pos[1] = dot->j;
 			pos[2] = dot->little_t;
-			hash = abs(fasthash32(pos, 3, 0));
+			hash = abs((int)fasthash32(pos, 3, 0));
 			ht_delete_key(matching->dot_ht, hash, dot, NULL);
 
 			// Free the dot and delete the lines linked list backbone

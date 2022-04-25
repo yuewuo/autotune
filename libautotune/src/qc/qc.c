@@ -6513,7 +6513,7 @@ int qc_hash_ijt(int i, int j, long int t) {
 	pos[1] = j;
 	pos[2] = t;
 
-	return abs(fasthash32(pos, 3, 0));
+	return abs((int)fasthash32(pos, 3, 0));
 }
 
 /**

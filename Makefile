@@ -6,7 +6,7 @@ WGET_FLAGS = ""
 
 TAR = "tar"
 
-BLOSSOMV_URL = "http://pub.ist.ac.at/~vnk/software/blossom5-v2.04.src.tar.gz"
+BLOSSOMV_URL = "https://pub.ist.ac.at/~vnk/software/blossom5-v2.05.src.tar.gz"
 BLOSSOMV_DIR = `basename $(BLOSSOMV_URL) .tar.gz`
 BLOSSOMV_FILE = `basename $(BLOSSOMV_URL)`
 
