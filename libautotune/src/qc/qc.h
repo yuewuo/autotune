@@ -11,6 +11,7 @@
 #include "../hash_table/hash_table.h"
 #include "../bheap/bheap.h"
 #include "../match/match.h"
+#include "../../../ex/src/my_recorder.h"
 
 // OPERATORS
 #define I 0
@@ -735,6 +736,7 @@ void qc_free_qc(QC *qc);
 void qc_free_qc_copy(QC *qc);
 void qc_increment_big_t(QC *qc);
 void qc_mwpm(QC *qc, int undo);
+void qc_mwpm_with_my_recorder(QC *qc, int undo, struct MyRecorder* my_recorder);
 void qc_undo_mwpm(QC *qc);
 QC *qc_copy_qc(QC *qc);
 QUBIT *qc_copy_qubit(QUBIT *q);

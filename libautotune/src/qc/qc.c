@@ -455,6 +455,10 @@ void qc_increment_big_t(QC *qc) {
  * \param[in] undo 1 if the matching should be undoable, 0 otherwise.
  */
 void qc_mwpm(QC *qc, int undo) {
+	qc_mwpm_with_my_recorder(qc, undo, NULL);
+}
+
+void qc_mwpm_with_my_recorder(QC *qc, int undo, struct MyRecorder* my_recorder) {
 	int d;
 
 	if (qc->recipe) {
@@ -481,10 +485,10 @@ void qc_mwpm(QC *qc, int undo) {
 	// Match the dual matching
 	//printf("M_PR\n");
 	m_update_dots_and_lines_into_bfs(qc->m_pr, qc->m_pr->g, undo);
-	m_mwpm(qc->m_pr, undo);
+	m_mwpm_with_my_recorder(qc->m_pr, undo, my_recorder);
 	//printf("M_DU\n");
 	m_update_dots_and_lines_into_bfs(qc->m_du, qc->m_du->g, undo);
-	m_mwpm(qc->m_du, undo);
+	m_mwpm_with_my_recorder(qc->m_du, undo, my_recorder);
 }
 
 /**

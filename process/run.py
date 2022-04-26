@@ -135,6 +135,7 @@ for r in runs:
 
     # Append the executable to the command
     command = [exe_name] + opts
+    print(command)
     if args['--dry']:
         pid = 0
     elif args['--pbs']:

@@ -259,7 +259,7 @@ void calculate_t_check(ARGS *args, RECIPE_ADV *recipe) {
 	while (TRUE) {
 		measure_stabilizers(sc_dp_qc, big_t);
 		qc_convert_nests(qc, FALSE);
-		qc_mwpm(qc, FALSE);
+		qc_mwpm_with_my_recorder(qc, FALSE, &sc_dp_qc->my_recorder);
 		correct_mts(sc_dp_qc);
 		qc_trim_nests(qc, qc->unfinalized_big_t - 20);
 		m_time_delete(qc->m_pr);	
@@ -371,7 +371,7 @@ void simulate_recipe(ARGS *args, RECIPE_ADV *recipe) {
 	while (big_t <= args->big_t_max && (sc_dp_qc->num_X_changes < args->max_num_X || sc_dp_qc->num_Z_changes < args->max_num_Z)) {
 		measure_stabilizers(sc_dp_qc, big_t);
 		qc_convert_nests(qc, FALSE);
-		qc_mwpm(qc, FALSE);
+		qc_mwpm_with_my_recorder(qc, FALSE, &sc_dp_qc->my_recorder);
 		correct_mts(sc_dp_qc);
 
 		// not quite sure why following needs -2 rather than -1
@@ -529,6 +529,10 @@ SC_DP_QC *create_sc_dp_qc(ARGS *args, RECIPE_ADV *recipe) {
 	create_initial_syndrome_and_set_arrays(sc_dp_qc, PRIMAL, d, d-1, sc_dp_qc->bdy_s1_pr, sc_dp_qc->bdy_s2_pr);
 	create_initial_syndrome_and_set_arrays(sc_dp_qc, DUAL, d-1, d, sc_dp_qc->bdy_s1_du, sc_dp_qc->bdy_s2_du);
 	
+	// prepare my recorder
+	sc_dp_qc->my_recorder.t_construct_graph = 0;
+	sc_dp_qc->my_recorder.t_blossom_v = 0;
+
 	return sc_dp_qc;
 }
 
@@ -1362,7 +1366,7 @@ void test_correct(SC_DP_QC *sc_dp_qc, FILE *out) {
 	qc_finalize_nests(qc2, qc2->big_t);
 	qc_convert_nests(qc2, TRUE);
 
-	qc_mwpm(qc2, TRUE);
+	qc_mwpm_with_my_recorder(qc2, TRUE, &sc_dp_qc->my_recorder);
 	correct_mts(sc_dp_qc2);
 
 	// Track how many test corrects have been performed for this simulation
@@ -1437,7 +1441,7 @@ void print_stats(SC_DP_QC *sc_dp_qc, FILE *out) {
 	double t2;
 
 	t2 = double_time();
-	fprintf(out, ">>> %.2f | %ld | Last: %d %d | Checks: %d %d | Changes: %d %d\n", 
+	fprintf(out, ">>> %.2f | %ld | Last: %d %d | Checks: %d %d | Changes: %d %d | My Recorder: %.6f %.6f\n", 
 		t2 - sc_dp_qc->t1, 
 		sc_dp_qc->dp_qc->qc->big_t, 
 		sc_dp_qc->last_X_check, 
@@ -1445,7 +1449,9 @@ void print_stats(SC_DP_QC *sc_dp_qc, FILE *out) {
 		sc_dp_qc->num_checks, 
 		sc_dp_qc->num_checks, 
 		sc_dp_qc->num_X_changes, 
-		sc_dp_qc->num_Z_changes
+		sc_dp_qc->num_Z_changes,
+		sc_dp_qc->my_recorder.t_construct_graph,
+		sc_dp_qc->my_recorder.t_blossom_v
 	);
 	fflush(out);
 }

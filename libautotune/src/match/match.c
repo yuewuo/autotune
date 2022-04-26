@@ -424,6 +424,8 @@ void m_solve(MATCHING *matching, BLOSSOMV *bv) {
 		assert(bv->num_vertices == 0 || bv->num_edges >= bv->num_vertices / 2);
 	}
 	
+	// printf("num_vertices: %d\n", bv->num_vertices);
+	// printf("num_edges: %d\n", bv->num_edges);
 	matching->pm = new PerfectMatching(bv->num_vertices, bv->num_edges);
 	options.verbose = false;
 	options.fractional_jumpstart = true;
@@ -563,6 +565,10 @@ void m_create_augmented_edges(MATCHING *matching, BLOSSOMV *bv, int undo) {
  * \param[in] undo Whether the matching should be undoable 
  */
 void m_mwpm(MATCHING *matching, int undo) {
+	m_mwpm_with_my_recorder(matching, undo, NULL);
+}
+
+void m_mwpm_with_my_recorder(MATCHING *matching, int undo, struct MyRecorder* my_recorder) {
 	int i, v_num, v_num1, v_num2, bdy_num;
 	int found_bdy, offset;
 	DOT *a, *b;
@@ -574,8 +580,8 @@ void m_mwpm(MATCHING *matching, int undo) {
 
 	//m_print_graph(matching);
 
-	//printf("\nm_mwpm(): %d\n", matching->t);
-	//printf("num_dots: %d\n", matching->num_dots);
+	// printf("\nm_mwpm(): %d\n", matching->t);
+	// printf("num_dots: %d\n", matching->num_dots);
 
 	// We want to build a BFS graph of the dots and lines, such that we can
 	// traverse the lattice. We will traverse the graph from each dot with a
@@ -604,11 +610,13 @@ void m_mwpm(MATCHING *matching, int undo) {
 	// Initialise the Blossom V structure
 	bv = m_create_blossomv(matching->num_vertices);
 
-	//printf("Num Vertices: %d, %d\n", matching->num_vertices, bv->num_vertices);
+	// printf("Num Vertices: %d, %d\n", matching->num_vertices, bv->num_vertices);
 
 	// Loop over the vertices in the matching and perform a BFS from each
 	// connecting each to one another.
 	offset = ((VERTEX *)node->key)->v_num; 
+
+	double t_start_construct_graph = double_time();
 
 	while (node != matching->graph) {
 		v1 = (VERTEX *)node->key;
@@ -710,8 +718,16 @@ void m_mwpm(MATCHING *matching, int undo) {
 		node = node->prev;
 	}
 
+	if (my_recorder) {
+		my_recorder->t_construct_graph += double_time() - t_start_construct_graph;
+	}
+
 	// Solve using Blossom V
+	double t_start_blossom_v = double_time();
 	m_solve(matching, bv);
+	if (my_recorder) {
+		my_recorder->t_blossom_v += double_time() - t_start_blossom_v;
+	}
 
 	// Create the augmented edges from the solution
 	m_create_augmented_edges(matching, bv, undo);

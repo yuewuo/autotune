@@ -18,6 +18,8 @@ struct sc_dp_qc {
 	int num_checks, last_X_check, last_Z_check, num_X_changes, num_Z_changes;
 	BALL **boundaries;
 	char *ems;
+	
+	struct MyRecorder my_recorder;
 };
 
 /** Arguments */

@@ -12,6 +12,9 @@ BLOSSOMV_FILE = `basename $(BLOSSOMV_URL)`
 
 all: blossomv libautotune polyestimate ex process
 
+# remove unnecessary packages that cannot compile...
+mac-m1x: blossomv libautotune ex
+
 install: download all
 	@echo "\n#\n# Please read and understand LICENSE.md and blossomv/LICENSE.TXT before continuing.\n#"
 

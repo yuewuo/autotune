@@ -4,6 +4,8 @@
 #include "../qc/qc.h"
 #include "../bfs/bfs.h"
 #include "../../../blossomv/PerfectMatching.h"
+#include "../../../ex/src/my_recorder.h"
+#include "../my_time/my_time.h"
 
 /* undo definitions */
 
@@ -281,6 +283,7 @@ void m_solve(MATCHING *matching, BLOSSOMV *bv);
 void m_create_augmented_edges(MATCHING *matching, BLOSSOMV *bv, int undo);
 
 void m_mwpm(MATCHING *matching, int undo);
+void m_mwpm_with_my_recorder(MATCHING *matching, int undo, struct MyRecorder* my_recorder);
 int m_time_delete(MATCHING *m); 
 AUG_EDGE *m_get_aug_edge(MATCHING *m);
 void m_delete_aug_edge(AUG_EDGE *ae);
